@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% load static %}
+{% block contents %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>SB Admin 2 - Charts</title>
+
+  
+  <link href='{% static "css/sb-admin-2.min.css" %}' rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+  <script src="static/js/chart.js"></script>
+	<script src="static/js/chart_functions.js"></script>
+  <script src="static/js/display_chart.js"></script>
+  <style>
+    body{
+      width:100%;
+      height:100%;
+      margin-top : 90px;
+    }
+    a{text-decoration: none;}
+    .clearfix{content:'';display:block; clear:both;}
+    
+    select{
+     font-size : 15px;
+    }
+    .news {
+      float:left;
+      margin-left:3%;
+      width:40%;
+      height:60%;
+    }
+    .chart1{
+      margin-left:3%;
+      float:left;
+      width:54%;
+      height:60%;
+    }
+    .row{
+    margin-bottom:2%;
+    }
+   .chart-bar{
+     width:100%;
+     height:90%;
+   }
+   .card-body{
+     height:60%;
+   }
+   canvas{
+     width:90%;
+     height:90%;
+   }
+   tr{
+     font-size:12px;
+   }
+   button{
+    width:10%;
+    height:10%;
+    font-size:20px;
+    border:white;
+    background-color:white;
+    color:#368af8;
+    margin-right:5%;
+  }
+  h3{
+    font-weight: bold;
+  }
+
+</style>
+</head>
+
+<body>
+    <div>
+      <div id="content">
+        <div class="container-fluid">
+          <div align="center">
+            <a href="{% url 'main' %}">
+            <button type="button" onClick="location.href=main"><strong>국내관련그래프</strong></button></a>
+            <a href="{% url 'main1' %}">
+            <button type="button" onClick="location.href=main1"><strong>해외관련그래프</strong></button></a>
+          </div><br><br>
+          <div class="row">
+              <div class="chart1">
+                  <h3>그래프를 선택하세요&nbsp;</h3><br>
+                  <form id="sample_form" method="POST" action="{% url 'main1' %}">
+                    {% csrf_token %}
+                    <select name="sel_chart">
+                      <option value="수출입"  selected>수출입 그래프</option>
+                      <option value="품목별">품목별 그래프</option>
+                    </select>
+                    <input type="submit" value="전송">
+                  </form>
+                <br><br>
+                <!-- Area Chart -->
+                <div class="card shadow">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">{{default_news}}그래프</h6>
+              </div>
+              <div class="card-body">
+                <div class="chart-bar">
+                  <canvas id="line_chart"></canvas>
+                </div>
+              </div>
+            </div>
+              </div>
+              <div class="news">
+                <!-- Page Heading -->
+                <form method="POST" action="{% url 'news1' %}">
+                  {% csrf_token %}
+                  <h3>뉴스피드</h3><br>
+                  <h4>키워드 검색 : <input type ="text" name="news_search" size="20">&nbsp;
+                  <input type = "submit" name="확인" value="Search"></h4><br><br>
+                </form>
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                  <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">뉴스피드</h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
+                        <thead>
+                          <tr>
+                            <th>제목</th>
+                            <th>출처</th>
+                            <th>링크</th>
+                          </tr>
+                        </thead>
+                        {%for i in newslist %}
+                        <tbody>
+                          <tr>
+                            <td>{{i.title}}</td>
+                            <td>{{i.source}}</td>
+                            <td> <a href="{{i.link}}" target="_blank" style="color: black;"><b>바로가기</b></a></td>
+                          </tr>
+                        </tbody>
+                        {%endfor %}
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+       
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  
+
+  <!-- Scroll to Top Button-->
+ <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="vendor/chart.js/Chart.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="js/demo/chart-area-demo.js"></script>
+  <script src="js/demo/chart-pie-demo.js"></script>
+  <script src="js/demo/chart-bar-demo.js"></script>
+</body>
+</html>
+{% endblock %}
